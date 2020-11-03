@@ -1,21 +1,24 @@
 import querystring from "querystring";
 import debug from "debug";
+
+//@ts-ignore
 import nonce from "nonce";
 
 import { OAuthStartOptions } from "./types";
 import getCookieOptions from "./cookie-options";
+import { Request, Response } from "express";
 
 const createNonce = nonce();
 
 const log = debug("server.oAuthQueryString");
 
 export default function oAuthQueryString(
-  req,
-  res,
+  req: Request,
+  res: Response,
   options: OAuthStartOptions,
   callbackPath: string
 ) {
-  const { hostname, cookies } = req;
+  const { hostname } = req;
   const { scopes = [], apiKey } = options;
 
   const requestNonce = createNonce();

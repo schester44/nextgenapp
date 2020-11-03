@@ -5,6 +5,7 @@ import oAuthQueryString from "./oauth-query-string";
 import getCookieOptions from "./cookie-options";
 
 import { TOP_LEVEL_OAUTH_COOKIE_NAME } from "./index";
+import { NextFunction, Response, Request } from "express";
 
 const log = debug("server.createOAuthStart");
 
@@ -12,9 +13,10 @@ export default function createOAuthStart(
   options: OAuthStartOptions,
   callbackPath: string
 ) {
-  return function oAuthStart(req, res, next) {
+  return function oAuthStart(req: Request, res: Response, next: NextFunction) {
     const { serviceDomain } = options;
     const { query } = req;
+    
     const { account } = query;
 
     log({ account, query, serviceDomain });
@@ -24,7 +26,7 @@ export default function createOAuthStart(
       "i"
     );
 
-    if (account == null || !accountRegex.test(account)) {
+    if (account == null || !accountRegex.test(account as string)) {
       return next(new AuthError(Errors.AccountParamMissing, 400));
     }
 

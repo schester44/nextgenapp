@@ -11,6 +11,7 @@ const FOOTER = `Cookies let the app authenticate you by temporarily storing your
 information. They expire after 30 days.`;
 const ACTION = "Enable cookies";
 
+// @ts-ignore
 export default function createEnableCookies({
   apiKey,
   prefix,

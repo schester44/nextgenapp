@@ -1,17 +1,21 @@
 {
-  "name": "server",
+  "name": "nextgen-app",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "DEBUG=server* ts-node-dev --respawn --no-notify --ignore-watch .next --ignore-watch node_modules  --project tsconfig.server.json server.ts"
+    "dev": "DEBUG=server* nodemon"
   },
   "author": "Steven Chester",
   "license": "ISC",
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.8",
     "@types/express": "^4.17.8",
+    "@types/express-session": "^1.17.0",
     "@types/node": "^14.14.6",
+    "@types/node-fetch": "^2.5.7",
     "@zeit/next-css": "^1.0.1",
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",

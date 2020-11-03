@@ -9,13 +9,15 @@ export default function validateHmac(
 ): boolean {
   const { hmac: _hmac, ...map } = query;
 
+  const v: { [k: string]: any } = {};
+
   // Sort params lexographically
-  const sortedQuery = Object.keys(map)
+  const sortedQuery: { [k: string]: any } = Object.keys(map)
     .sort((a, b) => a.localeCompare(b))
     .reduce((acc, curr) => {
       acc[curr] = query[curr];
       return acc;
-    }, {});
+    }, v);
 
   // convert to query string
   const queryString = qs.stringify(sortedQuery);

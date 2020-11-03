@@ -8,12 +8,12 @@ enum Errors {
 export default Errors;
 
 export class AuthError extends Error {
-  public code: string;
+  public code: number | undefined;
 
-  constructor(message, code) {
+  constructor(message: string, statusCode?: number) {
     super();
 
-    this.code = code;
+    this.code = statusCode;
     this.message = message;
     this.name = "AuthError";
   }

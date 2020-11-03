@@ -1,4 +1,14 @@
-export default function redirectionScript({ origin, redirectTo, apiKey }) {
+export type RedirectionPageOptions = {
+  origin: string;
+  redirectTo: string;
+  apiKey: string;
+};
+
+export default function redirectionScript({
+  origin,
+  redirectTo,
+  apiKey,
+}: RedirectionPageOptions) {
   return `
     <script type="text/javascript">
       document.addEventListener('DOMContentLoaded', function() {

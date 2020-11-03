@@ -4,7 +4,7 @@ import { loginAgainIfDifferentAccount } from "./login-again-if-different-account
 import { verifyToken } from "./verify-token";
 import { Options, Routes } from "./types";
 
-const log = debug("server.auth");
+const log = debug("server.auth.verifyRequest");
 
 export default function verifyRequest(givenOptions: Options = {}) {
   const routes: Routes = {
@@ -13,7 +13,9 @@ export default function verifyRequest(givenOptions: Options = {}) {
     ...givenOptions,
   };
 
-  log("verifyRequestMiddleware");
+  log("verifying request");
 
+  // FIXME: Fix the typescript error
+  //@ts-ignore
   return compose([loginAgainIfDifferentAccount(routes), verifyToken(routes)]);
 }

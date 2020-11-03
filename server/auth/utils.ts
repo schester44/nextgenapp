@@ -2,8 +2,10 @@ import { Routes } from "./types";
 import { Request, Response } from "express";
 
 export function clearSession(req: Request) {
-  delete req.session.account;
-  delete req.session.accessToken;
+  if (req.session) {
+    delete req.session.account;
+    delete req.session.accessToken;
+  }
 }
 
 export function redirectToAuth(

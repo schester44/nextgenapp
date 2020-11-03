@@ -14,7 +14,7 @@ export function loginAgainIfDifferentAccount(routes: Routes) {
   ) {
     const { query, session } = req;
 
-    log(query, session);
+    log("redirect to auth", session?.account, query.account);
 
     if (session && query.account && session.account !== query.account) {
       clearSession(req);

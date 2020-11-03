@@ -1,26 +1,25 @@
 import querystring from "querystring";
+import debug from "debug";
 
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
 import redirectionPage from "./redirection-page";
 
+const log = debug("server.auth.createTopLevelRedirect");
+
 export default function createTopLevelRedirect(apiKey: string, path: string) {
-  return function topLevelRedirect(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  return function topLevelRedirect(req: Request, res: Response) {
     const { hostname, query } = req;
     const { account } = query;
 
-    // FIXME: why do I need to type `as string`
     const queryString = querystring.stringify({ account: account as string });
+
+    log({ hostname, path });
 
     res.send(
       redirectionPage({
-        origin: account,
-        // FIXME: Change to https
-        redirectTo: `http://${hostname}${path}?${queryString}`,
+        origin: account as string,
+        redirectTo: `https://${hostname}${path}?${queryString}`,
         apiKey,
       })
     );

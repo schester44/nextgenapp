@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
 import createTopLevelRedirect from "./create-top-level-redirect";
 import getCookieOptions from "./cookie-options";
@@ -11,13 +11,9 @@ export default function createTopLevelOAuthRedirect(
 ) {
   const redirect = createTopLevelRedirect(apiKey, path);
 
-  return function topLevelOAuthRedirect(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  return function topLevelOAuthRedirect(req: Request, res: Response) {
     res.cookie(TOP_LEVEL_OAUTH_COOKIE_NAME, "1", getCookieOptions(req));
 
-    redirect(req, res, next);
+    redirect(req, res);
   };
 }

@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { Request, Response, NextFunction } from "express";
 import debug from "debug";
 import createOAuthStart from "./create-oauth-start";
 import createOAuthCallback from "./create-oauth-callback";
@@ -16,7 +16,6 @@ export const GRANTED_STORAGE_ACCESS_COOKIE_NAME = "app.granted_storage_access";
 const log = debug("server.auth");
 
 function hasCookieAccess({ cookies }: Request) {
-  log(cookies, TEST_COOKIE_NAME);
   return Boolean(cookies[TEST_COOKIE_NAME]);
 }
 
@@ -35,8 +34,6 @@ export default function createAppAuth(options: OAuthStartOptions) {
     serviceDomain: DEFAULT_SERVICE_DOMAIN,
     ...options,
   };
-
-  log(config);
 
   const { prefix } = config;
 
@@ -63,7 +60,11 @@ export default function createAppAuth(options: OAuthStartOptions) {
     inlineOAuthPath,
   });
 
-  return async function appAuth(req, res, next) {
+  return async function appAuth(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const fullPath = req.baseUrl + req.path;
 
     log({
@@ -94,7 +95,7 @@ export default function createAppAuth(options: OAuthStartOptions) {
 
     if (fullPath === oAuthStartPath) {
       log("do topLevelOAuthRedirect");
-      await topLevelOAuthRedirect(req, res, next);
+      await topLevelOAuthRedirect(req, res);
       return;
     }
 

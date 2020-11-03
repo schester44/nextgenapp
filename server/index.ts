@@ -43,12 +43,13 @@ app.prepare().then(() => {
 
   server.use(
     appAuth({
-      apiKey: process.env.APP_API_KEY,
-      secret: process.env.APP_API_SECRET,
+      apiKey: process.env.APP_API_KEY as string,
+      secret: process.env.APP_API_SECRET as string,
       // scopes to request on the company's account
       scopes: ["read_devices", "write_campaigns"],
       // callback for when auth is completed
       afterAuth(req, res) {
+        // @ts-ignore
         const { account, accessToken } = req.session;
 
         log("Authenticated", accessToken, req.session);
@@ -58,12 +59,11 @@ app.prepare().then(() => {
     })
   );
 
-  // FIXME:
-  //@ts-ignore
   server.use(verifyRequest());
 
-  server.get("*", (req, res) => {
-    return handle(req, res);
+  server.use((req, res) => {
+    console.log("handle");
+    handle(req, res);
   });
 
   server.listen(PORT, () => {
