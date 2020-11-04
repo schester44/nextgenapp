@@ -1,11 +1,15 @@
-import express from "express";
+require("dotenv").config();
+
+import express, { Request, Response } from "express";
 import Debug from "debug";
 import cors from "cors";
 import next from "next";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import connectRedis from "connect-redis";
+import appAuth, { verifyRequest } from "express-app-auth";
 
-import appAuth, { verifyRequest } from "./auth";
+import { createRedis } from "./redis";
 
 const log = Debug("server");
 
@@ -15,7 +19,7 @@ const PORT = parseInt(process.env.PORT || "3002", 10);
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-log("Starting server on", PORT);
+log("Preparing app on %o", PORT);
 
 app.prepare().then(() => {
   log("App prepared");
@@ -27,11 +31,14 @@ app.prepare().then(() => {
 
   server.set("trust proxy", true);
 
+  const RedisStore = connectRedis(session);
+
   server.use(
     session({
       name: "app_sess",
-      secret: "SUPER-SECRET-123",
+      secret: process.env.SESSION_SECRET as string,
       saveUninitialized: false,
+      store: new RedisStore({ client: createRedis() }),
       cookie: {
         httpOnly: true,
         secure: true,
@@ -48,11 +55,10 @@ app.prepare().then(() => {
       // scopes to request on the company's account
       scopes: ["read_devices", "write_campaigns"],
       // callback for when auth is completed
-      afterAuth(req, res) {
-        // @ts-ignore
-        const { account, accessToken } = req.session;
+      afterAuth(req: Request, res: Response) {
+        const { account } = req.session as Express.Session;
 
-        log("Authenticated", accessToken, req.session);
+        log("Authenticated");
 
         res.redirect(`/?account=${account}`);
       },
@@ -61,10 +67,7 @@ app.prepare().then(() => {
 
   server.use(verifyRequest());
 
-  server.use((req, res) => {
-    console.log("handle");
-    handle(req, res);
-  });
+  server.use((req, res) => handle(req, res));
 
   server.listen(PORT, () => {
     log(`Server ready on http://localhost:${PORT}`);
