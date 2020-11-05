@@ -1,29 +1,18 @@
 import Link from "next/link";
 import TitleBar from "components/AppLink/TitleBar";
 import { useEffect } from "react";
-import { useAppLink } from "components/AppLink/Context";
-import { Toast } from "cchd-applink";
+import { useToast } from "../hooks/useToast";
 
 export default function Sources() {
-  const app = useAppLink();
+  const showToast = useToast();
 
   useEffect(() => {
-    if (!app) return;
-
-    Toast.create(app, {
-      appearance: "info",
-      message: "my notification created by the app",
-      duration: 2500,
-    }).dispatch(Toast.Action.Show);
+    showToast({ message: "my app notification" });
 
     setTimeout(() => {
-      Toast.create(app, {
-        appearance: "error",
-        message: "THIS IS WAY TOO COOL!",
-        title: "Error!",
-      }).dispatch(Toast.Action.Show);
+      showToast({ message: "WOAH, COOL ERROR!", appearance: "error" });
     }, 1500);
-  }, [app]);
+  }, [showToast]);
 
   return (
     <div>

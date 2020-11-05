@@ -2,12 +2,12 @@ import Link from "next/link";
 import TitleBar from "components/AppLink/TitleBar";
 import Loading from "components/AppLink/Loading";
 import { useState } from "react";
-import { useAppLink } from "components/AppLink/Context";
+import { useToast } from "../hooks/useToast";
 
 export default function Index() {
   const [loading, setLoading] = useState(false);
 
-  const app = useAppLink();
+  const showToast = useToast();
 
   return (
     <div>
@@ -29,17 +29,9 @@ export default function Index() {
           onClick={() => {
             setLoading(false);
 
-            app.dispatch({
-              type: "APP::TOAST::SHOW",
-              payload: {
-                id: "12345",
-
-                // TODO: Change to 'appearance'
-                toastType: "success",
-                appearance: "success",
-                message: "Async Action Completed!",
-                duration: 2500,
-              },
+            showToast({
+              appearance: "success",
+              message: "Async Action Completed",
             });
           }}
         >
